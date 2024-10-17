@@ -1,14 +1,6 @@
 <template>
-  <q-item
-    clickable
-    tag="a"
-    target="_blank"
-    :href="link"
-  >
-    <q-item-section
-      v-if="icon"
-      avatar
-    >
+  <q-item clickable :to="{ name }" :active="router.currentRoute.name === name">
+    <q-item-section v-if="icon" avatar>
       <q-icon :name="icon" />
     </q-item-section>
 
@@ -21,35 +13,42 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { useRouter } from 'vue-router';
 
 export interface EssentialLinkProps {
   title: string;
   caption?: string;
-  link?: string;
+  name: string;
   icon?: string;
-};
+}
 
 export default defineComponent({
   name: 'EssentialLink',
   props: {
     title: {
       type: String,
-      required: true
+      required: true,
     },
 
     caption: {
       type: String,
-      default: ''
+      default: '',
     },
 
-    link: {
+    name: {
       type: String,
-      default: '#'
+      required: true,
     },
 
     icon: {
       type: String,
-      default: ''
+      default: '',
+    },
+  },
+
+  data() {
+    return {
+      router: useRouter()
     }
   }
 });

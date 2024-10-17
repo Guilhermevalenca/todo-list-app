@@ -1,0 +1,31 @@
+{
+  "users": [
+    {
+      "id": "72c9",
+      "name": "Guilherme",
+      "idade": 4
+    },
+    {
+      "id": "1d75",
+      "name": "Gabriel",
+      "idade": 5
+    },
+    {
+      "id": "2b31",
+      "name": "wey",
+      "idade": 7
+    },
+    {
+      "id": "992e",
+      "name": "João",
+      "idade": 14
+    },
+    {
+      "id": "0801",
+      "name": "João",
+      "idade": 14
+    }
+  ],
+  "todos": [],
+  "groups": []
+}
