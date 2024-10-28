@@ -85,6 +85,7 @@ export default configure((/* ctx */) => {
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
     framework: {
       config: {},
+      autoImportScriptExtensions: ['ts', 'js', 'jsx', 'tsx', 'vue'],
 
       // iconSet: 'material-icons', // Quasar icon set
       lang: 'pt-BR', // Quasar language pack
@@ -206,5 +207,7 @@ export default configure((/* ctx */) => {
 
       contentScripts: ['my-content-script'],
     },
+    supportTS: true,
+    supportTSX: true,
   };
 });

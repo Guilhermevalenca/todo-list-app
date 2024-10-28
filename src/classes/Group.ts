@@ -8,7 +8,7 @@ export default class Group implements TGroup {
   private _name: string;
   private _description: string;
   private _users: User[] | TUser[] = [];
-  private readonly _todos: Todo[] | TUser[] = [];
+  private _todos: Todo[] | TUser[] = [];
 
   public constructor(data: TGroup) {
     this._id = data?.id;
@@ -42,5 +42,8 @@ export default class Group implements TGroup {
   }
   set users(value: User[] | TUser[]) {
     this._users = value;
+  }
+  set todos(value: Todo[] | TUser[]) {
+    this._todos = value;
   }
 }

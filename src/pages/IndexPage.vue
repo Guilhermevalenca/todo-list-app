@@ -10,7 +10,7 @@
           :key="index"
           clickable
           class="shadow-2 tw-mb-2"
-          @click="() => groupSelected = value"
+          @click="() => (groupSelected = value)"
         >
           <q-item-section>
             <q-item-label>{{ value.group.name }}</q-item-label>
@@ -21,12 +21,19 @@
     </div>
     <q-separator vertical inset />
     <div class="col-5">
-      <div v-if="groupSelected === null">
-        <p class="tw-text-center tw-text-xl">Nenhum grupo selecionado</p>
-      </div>
-      <div v-else>
-        <InfoGroupComponent :user-on-group="groupSelected" />
-      </div>
+      <transition name="fade">
+        <keep-alive>
+          <div v-if="groupSelected === null">
+            <p class="tw-text-center tw-text-xl">Nenhum grupo selecionado</p>
+          </div>
+          <div v-else>
+            <InfoGroupComponent
+              :user-on-group="groupSelected"
+              @info-close="groupSelected = null"
+            />
+          </div>
+        </keep-alive>
+      </transition>
     </div>
   </q-page>
 </template>
@@ -38,12 +45,13 @@ import TUsersOnGroups from 'src/classes/types/TUsersOnGroups.ts';
 import UsersOnGroups from 'src/classes/UsersOnGroups.ts';
 import Group from 'src/classes/Group.ts';
 import InfoGroupComponent from 'components/IndexPage/InfoGroupComponent.vue';
+import queryGraphQL from 'src/functions/queryGraphQL.ts';
 
 export default defineComponent({
   name: 'IndexPage',
 
   components: {
-    InfoGroupComponent
+    InfoGroupComponent,
   },
 
   data() {
@@ -58,7 +66,7 @@ export default defineComponent({
 
   methods: {
     async getGroups() {
-      const query = `{
+      await queryGraphQL(`{
         user {
           groups {
             role,
@@ -68,13 +76,10 @@ export default defineComponent({
             },
           },
         }
-      }`;
-      this.$axios.get('graphql?query=' + query).then(
+      }`).then(
         ({
           data: {
-            data: {
-              user: { groups },
-            },
+            user: { groups },
           },
         }) => {
           this.groups = groups.map((data: TUsersOnGroups) => {

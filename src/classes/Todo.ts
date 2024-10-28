@@ -3,9 +3,9 @@ import TTodo from 'src/classes/types/TTodo.ts';
 import StatusTodo from 'src/classes/enums/StatusTodo.ts';
 import statusTodo from 'src/classes/enums/StatusTodo.ts';
 import TUser from 'src/classes/types/TUser.ts';
-import Instances from 'src/classes/Instances.ts';
+import { api } from 'boot/axios.ts';
 
-export default class Todo extends Instances implements TTodo {
+export default class Todo implements TTodo {
   private readonly _id: number | undefined;
   private _title: string = '';
   private _description: string = '';
@@ -14,7 +14,6 @@ export default class Todo extends Instances implements TTodo {
   private _users: User[] | TUser[] = [];
 
   constructor(data: TTodo) {
-    super();
     this._id = data.id;
     this._title = data.title;
     this._description = data.description;
@@ -60,11 +59,11 @@ export default class Todo extends Instances implements TTodo {
     this._groupId = value;
   }
   set status(value: string) {
-    if (value === 'Concluído') {
+    if (value === 'Concluído' || value === StatusTodo.completed) {
       this._status = StatusTodo.completed;
-    } else if (value === 'Em progresso') {
+    } else if (value === 'Em progresso' || value === StatusTodo.inProgress) {
       this._status = StatusTodo.inProgress;
-    } else if (value === 'Pendente') {
+    } else if (value === 'Pendente' || value === StatusTodo.notCompleted) {
       this._status = StatusTodo.notCompleted;
     }
   }
@@ -114,7 +113,7 @@ export default class Todo extends Instances implements TTodo {
       },
       users: this.getUsersIds(),
     };
-    return this.$axios.post('todos', data);
+    return api.post('todos', data);
   }
 
   public async update() {
@@ -126,6 +125,6 @@ export default class Todo extends Instances implements TTodo {
       },
       users: this.getUsersIds(),
     };
-    return this.$axios.put('todos', data);
+    return api.put('todos', data);
   }
 }

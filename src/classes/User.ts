@@ -3,10 +3,10 @@ import Todo from './Todo';
 import TUser from 'src/classes/types/TUser.ts';
 import TUsersOnGroups from 'src/classes/types/TUsersOnGroups.ts';
 import TTodo from 'src/classes/types/TTodo.ts';
-import Instances from 'src/classes/Instances.ts';
 import useUserStore from 'stores/use-user-store.ts';
+import { api } from 'boot/axios.ts';
 
-export default class User extends Instances implements TUser {
+export default class User implements TUser {
   private _id: number | undefined;
   private _name: string | undefined;
   private _email: string | undefined;
@@ -15,7 +15,6 @@ export default class User extends Instances implements TUser {
   private readonly _todos: Todo[] | TTodo[] | undefined;
 
   constructor(data: TUser) {
-    super();
     this._id = data?.id;
     this._name = data?.name;
     this._email = data?.email;
@@ -60,7 +59,7 @@ export default class User extends Instances implements TUser {
   }
 
   static async createAccount(user: TUser & { confirmationPassword: string }) {
-    return this.$axios.post('users', user);
+    return api.post('users', user);
   }
 
   async login() {
@@ -69,10 +68,10 @@ export default class User extends Instances implements TUser {
       password: this._password,
     };
 
-    return await this.$axios.post('users/login', data).then(({ data }) => {
+    return await api.post('users/login', data).then(({ data }) => {
       localStorage.setItem('token', data.access_token);
 
-      this.$axios.defaults.headers.common['Authorization'] =
+      api.defaults.headers.common['Authorization'] =
         `Bearer ${data.access_token}`;
 
       this._id = Number(data.id);
@@ -83,7 +82,7 @@ export default class User extends Instances implements TUser {
   }
 
   static async isLogged() {
-    return await this.$axios
+    return await api
       .get('users')
       .then(({ data }) => {
         const user = useUserStore().user;
