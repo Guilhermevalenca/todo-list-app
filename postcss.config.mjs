@@ -1,13 +1,14 @@
 /* eslint-disable */
 // https://github.com/michael-ciniawsky/postcss-load-config
 
-import autoprefixer from 'autoprefixer'
+// import autoprefixer from 'autoprefixer'
 // import rtlcss from 'postcss-rtlcss'
 
 export default {
-  plugins: [
+  plugins: {
+    tailwindcss: {},
     // https://github.com/postcss/autoprefixer
-    autoprefixer({
+    autoprefixer: {
       overrideBrowserslist: [
         'last 4 Chrome versions',
         'last 4 Firefox versions',
@@ -18,7 +19,7 @@ export default {
         'last 4 FirefoxAndroid versions',
         'last 4 iOS versions'
       ]
-    }),
+    },
 
     // https://github.com/elchininet/postcss-rtlcss
     // If you want to support RTL css, then
@@ -26,5 +27,5 @@ export default {
     // 2. optionally set quasar.config.js > framework > lang to an RTL language
     // 3. uncomment the following line (and its import statement above):
     // rtlcss()
-  ]
+  },
 }

@@ -1,55 +1,95 @@
 <template>
   <q-page class="row items-center justify-evenly">
-    <example-component
-      title="Example component"
-      active
-      :todos="todos"
-      :meta="meta"
-    ></example-component>
+    <div class="col-5">
+      <p class="tw-text-2xl">
+        <strong>Seus grupos:</strong>
+      </p>
+      <q-list>
+        <q-item
+          v-for="(value, index) in groups"
+          :key="index"
+          clickable
+          class="shadow-2 tw-mb-2"
+          @click="() => groupSelected = value"
+        >
+          <q-item-section>
+            <q-item-label>{{ value.group.name }}</q-item-label>
+            <q-item-label caption>Você é: {{ value.role }}</q-item-label>
+          </q-item-section>
+        </q-item>
+      </q-list>
+    </div>
+    <q-separator vertical inset />
+    <div class="col-5">
+      <div v-if="groupSelected === null">
+        <p class="tw-text-center tw-text-xl">Nenhum grupo selecionado</p>
+      </div>
+      <div v-else>
+        <InfoGroupComponent :user-on-group="groupSelected" />
+      </div>
+    </div>
   </q-page>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Todo, Meta } from 'components/models';
-import ExampleComponent from 'components/ExampleComponent.vue';
+import useUserStore from 'stores/use-user-store.ts';
+import TUsersOnGroups from 'src/classes/types/TUsersOnGroups.ts';
+import UsersOnGroups from 'src/classes/UsersOnGroups.ts';
+import Group from 'src/classes/Group.ts';
+import InfoGroupComponent from 'components/IndexPage/InfoGroupComponent.vue';
 
 export default defineComponent({
   name: 'IndexPage',
 
   components: {
-    ExampleComponent,
+    InfoGroupComponent
   },
 
   data() {
-    const todos: Todo[] = [
-      {
-        id: 1,
-        content: 'ct1',
-      },
-      {
-        id: 2,
-        content: 'ct2',
-      },
-      {
-        id: 3,
-        content: 'ct3',
-      },
-      {
-        id: 4,
-        content: 'ct4',
-      },
-      {
-        id: 5,
-        content: 'ct5',
-      },
-    ];
-
-    const meta: Meta = {
-      totalCount: 1200,
+    const groups: UsersOnGroups[] = [];
+    const groupSelected: UsersOnGroups | null = null;
+    return {
+      userStore: useUserStore().user,
+      groups,
+      groupSelected,
     };
+  },
 
-    return { todos, meta };
+  methods: {
+    async getGroups() {
+      const query = `{
+        user {
+          groups {
+            role,
+            group {
+              id,
+              name,
+            },
+          },
+        }
+      }`;
+      this.$axios.get('graphql?query=' + query).then(
+        ({
+          data: {
+            data: {
+              user: { groups },
+            },
+          },
+        }) => {
+          this.groups = groups.map((data: TUsersOnGroups) => {
+            return new UsersOnGroups({
+              role: data.role,
+              group: new Group(data.group),
+            });
+          });
+        },
+      );
+    },
+  },
+
+  mounted() {
+    this.getGroups();
   },
 });
 </script>
