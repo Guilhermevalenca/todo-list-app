@@ -80,20 +80,20 @@ export default defineComponent({
       }`)
         .then(({ data: { group } }) => {
           this.userGroup.group.description = group?.description;
-          this.userGroup.group.todos = group?.todos;
+          this.userGroup.group.todos = group?.todos.map(
+            (todo: TTodo) =>
+              new Todo({
+                id: todo.id,
+                title: todo.title,
+              }),
+          );
         })
         .finally(() => {
           this.loading.todo = false;
         });
     },
     setShowTodo(value: Todo | TTodo) {
-      this.todoSelected =
-        value instanceof Todo
-          ? value
-          : new Todo({
-              id: value.id,
-              title: value.title,
-            });
+      this.todoSelected = value;
       this.showTodo = true;
     },
   },
@@ -125,22 +125,24 @@ export default defineComponent({
     class="tw-grid tw-gap-2 tw-overflow-auto tw-w-full"
     style="max-height: 80vh"
   >
-    <transition name="fade">
+    <div>
       <div>
-        <div>
-          <q-btn
-            icon="close"
-            class="tw-block tw-ml-auto shadow-4"
-            round
-            push
-            @click="$emit('info-close')"
-          />
-        </div>
-        <p class="tw-text-2xl tw-text-center tw-mb-0">
-          <strong>{{ userGroup.group.name }}</strong>
-        </p>
+        <q-btn
+          icon="close"
+          class="tw-block tw-ml-auto shadow-4"
+          round
+          push
+          @click="$emit('info-close')"
+        />
+      </div>
+      <p class="tw-text-2xl tw-text-center tw-mb-0">
+        <strong>{{ userGroup.group.name }}</strong>
+      </p>
+      <transition name="fade">
         <div v-if="loading.user">
-          <LoadingComponent text="Estamos Carregando os demais dados do grupo" />
+          <LoadingComponent
+            text="Estamos Carregando os demais dados do grupo"
+          />
         </div>
         <div v-else>
           <p class="tw-text-gray-600">
@@ -161,8 +163,8 @@ export default defineComponent({
             </q-item>
           </div>
         </div>
-      </div>
-    </transition>
+      </transition>
+    </div>
     <q-separator inset />
     <div>
       <p class="tw-text-xl">
@@ -170,12 +172,11 @@ export default defineComponent({
       </p>
       <transition name="fade">
         <div v-if="loading.todo">
-          <LoadingComponent text="Estamos terminando de carregar as tarefas do grupo" />
+          <LoadingComponent
+            text="Estamos terminando de carregar as tarefas do grupo"
+          />
         </div>
-        <div
-          v-else
-          class="tw-grid tw-grid-cols-3 tw-gap-2"
-        >
+        <div v-else class="tw-grid tw-grid-cols-3 tw-gap-2">
           <q-item
             v-for="(todo, index) in userGroup.group?.todos"
             :key="index"
@@ -184,9 +185,9 @@ export default defineComponent({
             @click="() => setShowTodo(todo)"
           >
             <q-item-section>
-            <span class="tw-break-words tw-w-full">
-              {{ todo.title }}
-            </span>
+              <span class="tw-break-words tw-w-full">
+                {{ todo.title }}
+              </span>
             </q-item-section>
           </q-item>
         </div>

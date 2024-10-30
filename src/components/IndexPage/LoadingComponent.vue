@@ -8,8 +8,8 @@ export default defineComponent({
     text: {
       type: String,
       required: true,
-    }
-  }
+    },
+  },
 });
 </script>
 
@@ -17,13 +17,11 @@ export default defineComponent({
   <q-card>
     <q-card-section>
       <p class="tw-text-2xl tw-text-center">
-        <strong>{{text}}</strong>
+        <strong>{{ text }}</strong>
       </p>
       <q-spinner color="primary" size="3em" class="tw-block tw-mx-auto" />
     </q-card-section>
   </q-card>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

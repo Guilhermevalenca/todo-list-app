@@ -118,13 +118,13 @@ export default class Todo implements TTodo {
 
   public async update() {
     const data = {
-      todo: {
-        title: this._title,
-        description: this._description,
-        groupId: this._groupId,
-      },
-      users: this.getUsersIds(),
+      title: String(this._title),
+      description: String(this._description),
+      status: String(this._status),
     };
-    return api.put('todos', data);
+
+    return api.put('todos/' + Number(this._id), {
+      ...data,
+    });
   }
 }

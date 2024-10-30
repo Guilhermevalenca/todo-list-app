@@ -35,7 +35,7 @@ export default defineComponent({
     return {
       todoData,
       actionSelected,
-      Actions,
+      Actions
     };
   },
 
@@ -63,6 +63,22 @@ export default defineComponent({
   mounted() {
     this.getDataTodo();
   },
+
+  computed: {
+    textActionSelected() {
+      let value: string;
+      if(this.actionSelected === Actions.edit) {
+        value = 'Editar tarefa';
+      } else if(this.actionSelected === Actions.delete) {
+        value = 'Deletar tarefa';
+      } else if(this.actionSelected === Actions.addOrRemoveUser) {
+        value = 'Alterar lista de usuários';
+      } else {
+        value = 'Nenhum ação selecionada';
+      }
+      return value;
+    }
+  },
 });
 </script>
 
@@ -75,28 +91,29 @@ export default defineComponent({
         round
         push
         class="shadow-2 tw-block tw-ml-auto"
+        @click="$eventEmitter.emit('reset-unsaved')"
       />
     </q-card-section>
-    <div class="row">
-      <div class="col-5">
+    <div class="row justify-evenly">
+      <div class="col-4">
         <q-card-section>
           <p class="tw-text-2xl tw-text-center">
             <strong>Informações</strong>
           </p>
-          <div>
-            <ul>
+          <ul>
+            <li>
               <strong>Titulo: </strong>
               <span class="tw-break-words">{{ todoData.title }}</span>
-            </ul>
-            <ul>
+            </li>
+            <li>
               <strong>Descrição: </strong>
               <span class="tw-break-words">{{ todoData.description }}</span>
-            </ul>
-            <ul>
+            </li>
+            <li>
               <strong>Status: </strong>
               <span>{{ todoData.status }}</span>
-            </ul>
-          </div>
+            </li>
+          </ul>
         </q-card-section>
         <q-card-section>
           <p class="tw-text-2xl tw-text-center">
@@ -116,8 +133,22 @@ export default defineComponent({
           </div>
         </q-card-section>
       </div>
-      <q-separator vertical inset />
       <div class="col-5">
+        <q-card-section>
+          <p class="tw-text-2xl tw-text-center tw-mb-0">
+            <strong>Ação selecionada: </strong>
+          </p>
+          <p class="tw-text-gray-600">
+            {{ textActionSelected }}
+          </p>
+          <transition name="fade">
+            <keep-alive>
+              <component :is="actionSelected" :todo="todo" />
+            </keep-alive>
+          </transition>
+        </q-card-section>
+      </div>
+      <div class="col-3">
         <q-card-section>
           <p class="tw-text-2xl tw-text-center">
             <strong>Ações</strong>
@@ -154,13 +185,6 @@ export default defineComponent({
               </q-item-section>
             </q-item>
           </q-list>
-          <ul>
-            <transition name="fade">
-              <keep-alive>
-                <component :is="actionSelected" />
-              </keep-alive>
-            </transition>
-          </ul>
         </q-card-section>
       </div>
     </div>

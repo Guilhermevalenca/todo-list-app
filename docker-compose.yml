@@ -1,5 +1,5 @@
 version: "3.4"
-name: 'quasar-app'
+name: 'todo-list-app'
 services:
   app:
     image: node:20-alpine
