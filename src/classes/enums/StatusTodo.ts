@@ -12,6 +12,4 @@ enum StatusTodoTranslate {
 
 export default StatusTodo;
 
-export {
-  StatusTodoTranslate,
-}
+export { StatusTodoTranslate };

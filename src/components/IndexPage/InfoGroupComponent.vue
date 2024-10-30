@@ -117,86 +117,111 @@ export default defineComponent({
 </script>
 
 <template>
-  <div v-if="loading.all">
-    <LoadingComponent text="Estamos carregando os dados do grupo" />
-  </div>
-  <div
-    v-else
-    class="tw-grid tw-gap-2 tw-overflow-auto tw-w-full"
-    style="max-height: 80vh"
-  >
-    <div>
-      <div>
-        <q-btn
-          icon="close"
-          class="tw-block tw-ml-auto shadow-4"
-          round
-          push
-          @click="$emit('info-close')"
-        />
-      </div>
-      <p class="tw-text-2xl tw-text-center tw-mb-0">
-        <strong>{{ userGroup.group.name }}</strong>
-      </p>
-      <transition name="fade">
-        <div v-if="loading.user">
-          <LoadingComponent
-            text="Estamos Carregando os demais dados do grupo"
-          />
-        </div>
-        <div v-else>
-          <p class="tw-text-gray-600">
-            {{ userGroup.group.description }}
-          </p>
-          <p class="tw-text-xl tw-mt-6">
-            <strong>Usuários do grupo:</strong>
-          </p>
-          <div class="row tw-gap-2">
-            <q-item
-              v-for="(user, index) in userGroup.group?.users"
-              :key="index"
-              class="tw-border tw-border-solid tw-border-gray-400"
-            >
-              <q-item-section class="tw-w-full">
-                {{ user.name }} {{ user.id === userStore.id && '(Você)' }}
-              </q-item-section>
-            </q-item>
-          </div>
-        </div>
-      </transition>
+  <section>
+    <div v-if="loading.all">
+      <LoadingComponent text="Estamos carregando os dados do grupo" />
     </div>
-    <q-separator inset />
-    <div>
-      <p class="tw-text-xl">
-        <strong>Tarefás associadas ao grupo:</strong>
-      </p>
-      <transition name="fade">
-        <div v-if="loading.todo">
-          <LoadingComponent
-            text="Estamos terminando de carregar as tarefas do grupo"
-          />
-        </div>
-        <div v-else class="tw-grid tw-grid-cols-3 tw-gap-2">
-          <q-item
-            v-for="(todo, index) in userGroup.group?.todos"
-            :key="index"
-            class="tw-border tw-border-solid tw-border-gray-400 shadow-2"
-            clickable
-            @click="() => setShowTodo(todo)"
+    <div
+      v-else
+      class="tw-grid tw-gap-2 tw-overflow-auto tw-w-full"
+      style="max-height: 80vh"
+    >
+      <div>
+        <div>
+          <q-btn
+            icon="mdi-dots-vertical"
+            class="tw-block tw-ml-auto shadow-4"
+            round
+            push
           >
-            <q-item-section>
+            <q-menu fit class="tw-text-nowrap tw-text-center">
+              <q-item clickable>
+                <q-item-section>Adicionar usuário</q-item-section>
+              </q-item>
+              <q-item clickable>
+                <q-item-section>Adicionar Tarefá</q-item-section>
+              </q-item>
+              <q-item clickable>
+                <q-item-section @click="$emit('info-close')"
+                >Fechar</q-item-section
+                >
+              </q-item>
+            </q-menu>
+          </q-btn>
+        </div>
+        <p class="tw-text-2xl tw-text-center tw-mb-0">
+          <strong>{{ userGroup.group.name }}</strong>
+        </p>
+        <transition name="fade">
+          <div v-if="loading.user">
+            <LoadingComponent
+              text="Estamos Carregando os demais dados do grupo"
+            />
+          </div>
+          <div v-else>
+            <p class="tw-text-gray-600">
+              {{ userGroup.group.description }}
+            </p>
+            <p class="tw-text-xl tw-mt-6">
+              <strong>Usuários do grupo:</strong>
+            </p>
+            <div class="row tw-gap-2">
+              <q-item
+                v-for="(user, index) in userGroup.group?.users"
+                :key="index"
+                class="tw-border tw-border-solid tw-border-gray-400"
+              >
+                <q-item-label class="tw-flex tw-items-center">
+                <span
+                >{{ user.name }}
+                  {{ user.id === userStore.id ? '(Você)' : '' }}</span
+                >
+                </q-item-label>
+                <q-item-section class="tw-ml-2">
+                  <q-btn color="negative" icon="mdi-delete" round>
+                    <q-tooltip>
+                      <p class="tw-text-xl">Remover usuário do grupo</p>
+                    </q-tooltip>
+                  </q-btn>
+                </q-item-section>
+              </q-item>
+            </div>
+          </div>
+        </transition>
+      </div>
+      <q-separator inset />
+      <div>
+        <p class="tw-text-xl">
+          <strong>Tarefás associadas ao grupo:</strong>
+        </p>
+        <transition name="fade">
+          <div v-if="loading.todo">
+            <LoadingComponent
+              text="Estamos terminando de carregar as tarefas do grupo"
+            />
+          </div>
+          <div v-else class="tw-grid tw-grid-cols-3 tw-gap-2">
+            <q-item
+              v-for="(todo, index) in userGroup.group?.todos"
+              :key="index"
+              class="tw-border tw-border-solid tw-border-gray-400 shadow-2"
+              clickable
+              @click="() => setShowTodo(todo)"
+            >
+              <q-item-section>
               <span class="tw-break-words tw-w-full">
                 {{ todo.title }}
               </span>
-            </q-item-section>
-          </q-item>
-        </div>
-      </transition>
+              </q-item-section>
+            </q-item>
+          </div>
+        </transition>
+      </div>
     </div>
-  </div>
-  <keep-alive>
-    <q-dialog v-model="showTodo" full-width full-height>
-      <ShowTodoComponent :todo="todoSelected" />
-    </q-dialog>
-  </keep-alive>
+    <keep-alive>
+      <q-dialog v-model="showTodo" full-width full-height>
+        <ShowTodoComponent :todo="todoSelected" />
+      </q-dialog>
+    </keep-alive>
+  </section>
 </template>

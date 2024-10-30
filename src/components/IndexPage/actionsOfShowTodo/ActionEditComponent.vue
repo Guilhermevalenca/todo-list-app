@@ -11,7 +11,7 @@ export default defineComponent({
     todo: {
       type: Todo,
       required: true,
-    }
+    },
   },
 
   data() {
@@ -20,13 +20,13 @@ export default defineComponent({
       title: this.todo.title,
       description: this.todo.description,
       status: this.todo.status,
-    }
+    };
 
     return {
       todoData,
       StatusTodoTranslate,
       todoOriginalValues,
-    }
+    };
   },
 
   activated() {
@@ -51,20 +51,18 @@ export default defineComponent({
           description,
           status,
         }
-      }`)
-        .then(({data: {todo}}) => {
-          this.todoData.title = todo?.title ?? '';
-          this.todoData.description = todo?.description ?? '';
-          this.todoData.status = todo?.status ?? StatusTodoTranslate.notCompleted;
-        })
+      }`).then(({ data: { todo } }) => {
+        this.todoData.title = todo?.title ?? '';
+        this.todoData.description = todo?.description ?? '';
+        this.todoData.status = todo?.status ?? StatusTodoTranslate.notCompleted;
+      });
     },
     async submit() {
-      await this.todo.update()
-        .then(() => {
-          console.log('editado com sucesso!!')
-        });
-    }
-  }
+      await this.todo.update().then(() => {
+        console.log('editado com sucesso!!');
+      });
+    },
+  },
 });
 </script>
 
@@ -75,7 +73,12 @@ export default defineComponent({
       <br />
       <q-input v-model="todoData.description" label="Descrição" outlined />
       <br />
-      <q-select v-model="todoData.status" label="Status" :options="Object.values(StatusTodoTranslate)" outlined />
+      <q-select
+        v-model="todoData.status"
+        label="Status"
+        :options="Object.values(StatusTodoTranslate)"
+        outlined
+      />
       <br />
       <div class="tw-flex tw-justify-center tw-gap-2">
         <q-btn type="button" rounded @click="resetValues">

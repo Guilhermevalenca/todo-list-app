@@ -1,39 +1,51 @@
 <template>
   <q-page class="row items-center justify-evenly">
-    <div class="col-5">
-      <p class="tw-text-2xl">
-        <strong>Seus grupos:</strong>
-      </p>
-      <q-list>
-        <q-item
-          v-for="(value, index) in groups"
-          :key="index"
-          clickable
-          class="shadow-2 tw-mb-2"
-          @click="() => (groupSelected = value)"
-        >
-          <q-item-section>
-            <q-item-label>{{ value.group.name }}</q-item-label>
-            <q-item-label caption>Você é: {{ value.role }}</q-item-label>
-          </q-item-section>
-        </q-item>
-      </q-list>
+    <div class="col-5 tw-grid">
+      <div>
+        <p class="tw-text-2xl">
+          <strong>Seus grupos:</strong>
+        </p>
+        <q-list>
+          <q-item clickable class="shadow-4 tw-mb-4" @click="isCreateGroup = true">
+            <q-item-section avatar>
+              <q-avatar round color="primary">
+                <q-icon name="mdi-plus" color="white" />
+              </q-avatar>
+            </q-item-section>
+            <q-item-label class="tw-flex tw-items-center">Criar novo grupo</q-item-label>
+          </q-item>
+          <q-item
+            v-for="(value, index) in groups"
+            :key="index"
+            clickable
+            class="shadow-2 tw-mb-2"
+            @click="alterGroup(value)"
+          >
+            <q-item-section>
+              <q-item-label>{{ value.group.name }}</q-item-label>
+              <q-item-label caption>Você é: {{ value.role }}</q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </div>
     </div>
     <q-separator vertical inset />
     <div class="col-5">
-      <transition name="fade">
-        <keep-alive>
-          <div v-if="groupSelected === null">
-            <p class="tw-text-center tw-text-xl">Nenhum grupo selecionado</p>
-          </div>
-          <div v-else>
-            <InfoGroupComponent
-              :user-on-group="groupSelected"
-              @info-close="groupSelected = null"
-            />
-          </div>
-        </keep-alive>
+      <transition>
+        <div v-if="groupSelected === null && !isCreateGroup" key="2">
+          <p class="tw-text-center tw-text-xl">Nenhum grupo selecionado</p>
+        </div>
       </transition>
+      <Transition name="fade">
+        <keep-alive key="0">
+          <CreateGroupComponent v-if="isCreateGroup" />
+          <InfoGroupComponent
+            v-else-if="groupSelected !== null"
+            :user-on-group="groupSelected"
+            @info-close="groupSelected = null"
+          />
+        </keep-alive>
+      </Transition>
     </div>
   </q-page>
 </template>
@@ -46,11 +58,13 @@ import UsersOnGroups from 'src/classes/UsersOnGroups.ts';
 import Group from 'src/classes/Group.ts';
 import InfoGroupComponent from 'components/IndexPage/InfoGroupComponent.vue';
 import queryGraphQL from 'src/functions/queryGraphQL.ts';
+import CreateGroupComponent from 'components/IndexPage/CreateGroupComponent.vue';
 
 export default defineComponent({
   name: 'IndexPage',
 
   components: {
+    CreateGroupComponent,
     InfoGroupComponent,
   },
 
@@ -61,6 +75,7 @@ export default defineComponent({
       userStore: useUserStore().user,
       groups,
       groupSelected,
+      isCreateGroup: false,
     };
   },
 
@@ -91,6 +106,14 @@ export default defineComponent({
         },
       );
     },
+    alterGroup(value: UsersOnGroups) {
+      this.groupSelected = value;
+      this.transitionGroup = true;
+      this.isCreateGroup = false;
+      setTimeout(() => {
+        this.transitionGroup = false;
+      },500);
+    }
   },
 
   mounted() {

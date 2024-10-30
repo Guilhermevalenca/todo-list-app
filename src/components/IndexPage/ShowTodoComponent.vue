@@ -35,7 +35,7 @@ export default defineComponent({
     return {
       todoData,
       actionSelected,
-      Actions
+      Actions,
     };
   },
 
@@ -67,17 +67,17 @@ export default defineComponent({
   computed: {
     textActionSelected() {
       let value: string;
-      if(this.actionSelected === Actions.edit) {
+      if (this.actionSelected === Actions.edit) {
         value = 'Editar tarefa';
-      } else if(this.actionSelected === Actions.delete) {
+      } else if (this.actionSelected === Actions.delete) {
         value = 'Deletar tarefa';
-      } else if(this.actionSelected === Actions.addOrRemoveUser) {
+      } else if (this.actionSelected === Actions.addOrRemoveUser) {
         value = 'Alterar lista de usuários';
       } else {
         value = 'Nenhum ação selecionada';
       }
       return value;
-    }
+    },
   },
 });
 </script>

@@ -9,7 +9,7 @@ export default defineComponent({
     todo: {
       type: Todo,
       required: true,
-    }
+    },
   },
 
   data() {
@@ -17,7 +17,7 @@ export default defineComponent({
 
     return {
       todoData,
-    }
+    };
   },
 
   activated() {
@@ -28,7 +28,6 @@ export default defineComponent({
 
 <template>
   <div>Eu adiciono e removo usuários</div>
-
 </template>
 
 <style scoped></style>

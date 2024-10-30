@@ -9,7 +9,7 @@ export default defineComponent({
     todo: {
       type: Todo,
       required: true,
-    }
+    },
   },
 
   data() {
@@ -17,7 +17,7 @@ export default defineComponent({
 
     return {
       todoData,
-    }
+    };
   },
 
   activated() {
@@ -27,7 +27,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div>Iae desgraça, eu apago essa bagaça</div>
+  <div></div>
 </template>
 
 <style scoped></style>
