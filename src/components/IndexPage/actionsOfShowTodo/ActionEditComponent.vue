@@ -59,7 +59,12 @@ export default defineComponent({
     },
     async submit() {
       await this.todo.update().then(() => {
-        console.log('editado com sucesso!!');
+        this.$q.notify({
+          message: 'Tarefá atualizada com sucesso!',
+          icon: 'done',
+          color: 'positive',
+          position: 'top',
+        });
       });
     },
   },

@@ -63,8 +63,8 @@ export default configure((/* ctx */) => {
           'vite-plugin-checker',
           {
             // vueTsc: {
-            //   tsconfigPath: 'tsconfig.vue-tsc.json',
-            // },
+            // tsconfigPath: 'tsconfig.vue-tsc.json',
+            //},
             eslint: {
               lintCommand: 'eslint "./**/*.{js,ts,mjs,cjs,vue}"',
             },
@@ -98,7 +98,7 @@ export default configure((/* ctx */) => {
       // directives: [],
 
       // Quasar plugins
-      plugins: ['Notify', 'Dark', 'Lang'],
+      plugins: ['Notify'],
     },
 
     // animations: 'all', // --- includes all animations

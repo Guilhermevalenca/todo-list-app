@@ -2,8 +2,10 @@ import User from 'src/classes/User';
 import Todo from 'src/classes/Todo.ts';
 import TGroup from 'src/classes/types/TGroup.ts';
 import TUser from 'src/classes/types/TUser.ts';
+import ICrud from 'src/classes/interface/ICrud.ts';
+import { api } from 'boot/axios.ts';
 
-export default class Group implements TGroup {
+export default class Group implements TGroup, ICrud {
   private readonly _id: number | undefined;
   private _name: string;
   private _description: string;
@@ -45,5 +47,25 @@ export default class Group implements TGroup {
   }
   set todos(value: Todo[] | TUser[]) {
     this._todos = value;
+  }
+
+  public async create() {
+    const data: TGroup = {
+      name: this._name,
+      description: this._description,
+    };
+
+    return api.post('groups', data);
+  }
+  public async update() {
+    const data: TGroup = {
+      name: this._name,
+      description: this._description,
+    };
+
+    return api.put('groups/' + Number(this._id), data);
+  }
+  public async delete() {
+    return api.delete('groups/' + Number(this._id));
   }
 }

@@ -4,8 +4,9 @@ import StatusTodo from 'src/classes/enums/StatusTodo.ts';
 import statusTodo from 'src/classes/enums/StatusTodo.ts';
 import TUser from 'src/classes/types/TUser.ts';
 import { api } from 'boot/axios.ts';
+import ICrud from 'src/classes/interface/ICrud.ts';
 
-export default class Todo implements TTodo {
+export default class Todo implements TTodo, ICrud {
   private readonly _id: number | undefined;
   private _title: string = '';
   private _description: string = '';
@@ -79,21 +80,6 @@ export default class Todo implements TTodo {
     }
   }
 
-  public addUser(user: User | TUser) {
-    this._users.push(user);
-  }
-
-  public removeUser(user: TUser) {
-    const index = this._users.findIndex((value: TUser) => value.id === user.id);
-    if (index !== -1) {
-      this._users.splice(index, 1);
-    }
-  }
-
-  public resetUsers() {
-    this._users = [];
-  }
-
   private getUsersIds(): { id?: number }[] {
     return this._users.map((user: User | TUser) => ({
       id: user?.id,
@@ -126,5 +112,13 @@ export default class Todo implements TTodo {
     return api.put('todos/' + Number(this._id), {
       ...data,
     });
+  }
+
+  public async delete() {
+    return api.delete('todos/' + Number(this._id));
+  }
+
+  public async updateManyUsers(user: (User | TUser)[]) {
+    return api.put('todos/' + Number(this._id) + '/user', user);
   }
 }

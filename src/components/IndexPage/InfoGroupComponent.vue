@@ -24,6 +24,13 @@ export default defineComponent({
 
   emits: ['info-close'],
 
+  provide() {
+    const dataUserGroup = this.userGroup;
+    return {
+      dataUserGroup,
+    };
+  },
+
   data() {
     const userGroup: UsersOnGroups = this.userOnGroup;
     const todoSelected: Todo | null = null;
@@ -143,7 +150,7 @@ export default defineComponent({
               </q-item>
               <q-item clickable>
                 <q-item-section @click="$emit('info-close')"
-                >Fechar</q-item-section
+                  >Fechar</q-item-section
                 >
               </q-item>
             </q-menu>
@@ -172,10 +179,10 @@ export default defineComponent({
                 class="tw-border tw-border-solid tw-border-gray-400"
               >
                 <q-item-label class="tw-flex tw-items-center">
-                <span
-                >{{ user.name }}
-                  {{ user.id === userStore.id ? '(Você)' : '' }}</span
-                >
+                  <span
+                    >{{ user.name }}
+                    {{ user.id === userStore.id ? '(Você)' : '' }}</span
+                  >
                 </q-item-label>
                 <q-item-section class="tw-ml-2">
                   <q-btn color="negative" icon="mdi-delete" round>
@@ -209,9 +216,9 @@ export default defineComponent({
               @click="() => setShowTodo(todo)"
             >
               <q-item-section>
-              <span class="tw-break-words tw-w-full">
-                {{ todo.title }}
-              </span>
+                <span class="tw-break-words tw-w-full">
+                  {{ todo.title }}
+                </span>
               </q-item-section>
             </q-item>
           </div>
